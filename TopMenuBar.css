@@ -1,0 +1,65 @@
+body{
+  margin:0px;
+  font-family: 'Roboto', sans-serif; 
+}
+
+div.ghosts{
+  background-image: url("http://sweetclipart.com/multisite/sweetclipart/files/imagecache/middle/halloween_ghosts_duo_2.png");
+  width: 100vw;
+}
+
+body.splash{
+  overflow: hidden;
+}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #252525;
+}
+
+.topnav p {
+  font-size: 15px;
+  float: right;
+  display: block;
+  color: #f2f2f2;
+  padding-right: 8px;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+	background-color: #0f58ba;
+    color: white;
+}
+
+.centre{
+  position: absolute; 
+  top:0; 
+  bottom: 0; 
+  left: 0; 
+  right: 0; 
+  margin: 
+  auto;
+}
+
+.border{
+  background-color: #000
+}
+
+.internal{
+  background-color: #fff;
+}
