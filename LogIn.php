@@ -1,3 +1,11 @@
+<?php 
+	session_start();
+	if(isset($_SESSION["ID"])){
+		header("Location:Dashboard.php");
+	}
+	include("DatabaseConnection.php");
+ ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +18,9 @@
 <body class="splash" onload="changeBackground();">
 
 	<div class="topnav">
-	  <a href="~About.php">About</a>
-	  <a class="active" href="~LogIn.php">Log in</a>
-	  <a href="~SignUp.php">Sign Up</a>
+	  <a href="About.php">About</a>
+	  <a class="active" href="LogIn.php">Log in</a>
+	  <a href="SignUp.php">Sign Up</a>
 	  <p>DEATHLIST.CLUB</p>
 	</div>
 
@@ -38,8 +46,6 @@
 
 
 	<?php 
-		include("DatabaseConnection.php");
-		
 		if($_SERVER["REQUEST_METHOD"]=="POST"){
 			$email=$_POST["email"];
 			$password=$_POST["password"];

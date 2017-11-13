@@ -1,3 +1,12 @@
+<?php 
+	session_start();
+	if(isset($_SESSION["ID"])){
+		header("Location:Dashboard.php");
+	}
+	date_default_timezone_set('UTC');
+	include("DatabaseConnection.php");
+ ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +19,9 @@
 <body class="splash" onload="changeBackground()">
 	
 	<div class="topnav">
-	  <a href="~About.php">About</a>
-	  <a href="~LogIn.php">Log in</a>
-	  <a class="active" href="~SignUp.php">Sign Up</a>
+	  <a href="About.php">About</a>
+	  <a href="LogIn.php">Log in</a>
+	  <a class="active" href="SignUp.php">Sign Up</a>
 	  <p>DEATHLIST.CLUB</p>
 	</div>
 	
@@ -43,7 +52,6 @@
 	</div>
 
 	<?php 
-		include("DatabaseConnection.php");
 		if($_SERVER["REQUEST_METHOD"]=="POST"){
 			$name=htmlspecialchars($_POST["Name"],ENT_QUOTES,'UTF-8');
 			$email=htmlspecialchars($_POST["Email"],ENT_QUOTES,'UTF-8');
@@ -101,7 +109,7 @@
 				$hashed=hash("sha512",$password);
 				$sql="INSERT INTO `Users`(`Name`, `UNIXJoined`, `Email`, `Password`) VALUES ('$name','$timestamp','$email','$hashed')";
 				if(mysqli_query($con,$sql)){
-					echo '<script language="javascript">alert("Your data has been added, please log in...");window.location.href = "~LogIn.php";</script>';
+					echo '<script language="javascript">alert("Your data has been added, please log in...");window.location.href = "LogIn.php";</script>';
 				}else{
 					echo '<script language="javascript">alert("An error occured, please try again...")</script>';
 				}

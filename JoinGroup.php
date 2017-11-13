@@ -1,13 +1,16 @@
 <?php 
 	session_start();
+	if(!isset($_SESSION["ID"])){
+		header("Location:LogIn.php");
+	}
 	include("DatabaseConnection.php");
  ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<title>User Dashboard</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,700" rel="stylesheet">
+	<title>Join Group</title>
 </head>
 <link rel="stylesheet" type="text/css" href="TopMenuBar.css" />
 <script src="Dynamics.js"></script>
@@ -29,8 +32,63 @@
 	<div style="background-color: #eee; min-height: 100vh; width: 100vw; position: absolute;">
 
 		<div style="padding-left: 15px; padding-right: 15px;">
-			<h1><u>Join Group</u></h1>
-
+		<h1><u>Join Group</u></h1>
+			<table>
+				<tr>
+					<td style="font-size: 20px; text-align: center;" colspan="5">Please Select Any Groups To Join</td>
+				</tr>
+				<tr>
+					<th>Group Name</th>
+					<th>Number of Members</th>
+					<th>Cycle Duration</th>
+					<th>£ Input per Cycle</th>
+					<th>Join?</th>
+				</tr>
+				<?php
+					$sql="SELECT * FROM `Groups`";
+			 		$results=mysqli_query($con,$sql);
+					while ($row=mysqli_fetch_assoc($results)) {
+						$sql2="SELECT * FROM `Memberships` WHERE `GroupID`=".$row["ID"];
+						$results2=mysqli_query($con,$sql2);
+						$value=mysqli_num_rows($results2);
+						$inGroup=false;
+						while ($row2=mysqli_fetch_assoc($results2)) {
+							if ($row2["UserID"]==$_SESSION["ID"]) {
+								$inGroup=true;
+								break;
+							}
+						}
+						echo "<tr>
+						<td>".htmlspecialchars($row["Name"],ENT_QUOTES,'UTF-8')."</td>
+						<td>".$value."</td>
+						<td>".$row["CycleDuration"]."</td>
+						<td>£".money_format("%n",$row["CycleInput"])."</td>
+						<td>";
+						if ($inGroup) {
+							echo "Already a member";
+						}else{
+							echo "
+								<form method='POST'>
+									<input type='hidden' name='Joining' value='".$row["ID"]."'>
+									<button style='width:100%;'>click to join</button>
+								</form>";
+							}
+						echo "
+						</td>
+						</tr>";
+					}
+					if($_SERVER["REQUEST_METHOD"]=="POST"){
+						$joining=$_POST["Joining"];
+						$user=$_SESSION["ID"];
+						$sql="INSERT INTO `Memberships` VALUES ('$joining','$user')";
+						if(mysqli_query($con,$sql)){
+							header("Refresh:0"); 
+						}else{
+							echo '<script language="javascript">alert("An error occured, please try again...")</script>';
+						}
+					}
+				?>
+			</table>
 
 		</div>
 

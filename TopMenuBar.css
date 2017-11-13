@@ -12,6 +12,10 @@ body.splash{
   overflow: hidden;
 }
 
+table, th, td {
+  border: 1px solid black;
+}
+
 /* --------- TOP MENU BAR SELECTOR --------- */
 
 .topnav {
@@ -45,10 +49,6 @@ body.splash{
 .topnav a.active {
 	background-color: #0f58ba;
     color: white;
-}
-
-table, th, td {
-  border: 1px solid black;
 }
 
 /* --------- --------------------- --------- */

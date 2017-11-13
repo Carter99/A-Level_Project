@@ -1,3 +1,10 @@
+<?php 
+	session_start();
+	if(isset($_SESSION["ID"])){
+		header("Location:Dashboard.php");
+	}
+ ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +17,9 @@
 <body class="splash" onload="changeBackground();">
 
 	<div class="topnav">
-	  <a class="active" href="~About.php">About</a>
-	  <a href="~LogIn.php">Log in</a>
-	  <a href="~SignUp.php">Sign Up</a>
+	  <a class="active" href="About.php">About</a>
+	  <a href="LogIn.php">Log in</a>
+	  <a href="SignUp.php">Sign Up</a>
 	  <p>DEATHLIST.CLUB</p>
 	</div>
 
