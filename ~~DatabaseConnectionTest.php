@@ -18,6 +18,7 @@
 				<th>Email</th>
 				<th>Password</th>
 				<th>Balance</th>
+			</tr>
 			<?php 
 				include("DatabaseConnection.php");
 				$sql="SELECT * FROM `Users`";
