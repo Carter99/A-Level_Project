@@ -41,7 +41,8 @@
 					$user_info=mysqli_fetch_assoc($results);
 					echo "Your user ID is: ".$user_info["ID"];
 					echo "<br>Your name is: ".$user_info["Name"];
-					echo "<br>Date and time of you joining: ".date("d-m-Y @ g:i a \G\M\T",$user_info["UNIXJoined"]);
+					date_default_timezone_set('UTC');
+					echo "<br>Date and time of you joining: ".date("d-m-Y @ g:i a",$user_info["UNIXJoined"]);
 					echo "<br>Your Balance, by comparison to when you created your account is: £".money_format("%n", $user_info["Balance"]);
 				}
 			 ?>

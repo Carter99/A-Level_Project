@@ -38,8 +38,9 @@
 				echo "<br>";
 				$t=time();
 				echo($t . "<br>");
+
 				date_default_timezone_set('UTC');
-				echo(date("Y-m-d-e",$t));
+				echo(date("d-m-Y @ g:i a",$t));
 			 ?>
 
 		 </table>
