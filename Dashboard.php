@@ -55,13 +55,17 @@
 			 		$sql="SELECT * FROM `Memberships` WHERE `UserID`=".$_SESSION["ID"];
 			 		$results=mysqli_query($con,$sql);
 					while ($row=mysqli_fetch_assoc($results)) {
+						$sql2="SELECT * FROM `Groups` WHERE `ID`=".$row["GroupID"];
+						$results2=mysqli_query($con,$sql2);
+						$groupInfo=mysqli_fetch_assoc($results2);
+						$lastDeath=time_format(time()-$groupInfo["LastDeath"]);
 						echo "
 						<tr>
 							<td>
-								<i>GroupID:</i> ".htmlspecialchars($row["GroupID"],ENT_QUOTES,'UTF-8')."
+								".htmlspecialchars($groupInfo["Name"],ENT_QUOTES,'UTF-8')."
 							</td>
 							<td>
-								N/a
+								".$lastDeath."
 							</td>
 						</tr>";
 					}

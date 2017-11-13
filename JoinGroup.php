@@ -41,7 +41,7 @@
 					<th>Group Name</th>
 					<th>Number of Members</th>
 					<th>Cycle Duration</th>
-					<th>£ Input per Cycle</th>
+					<th>Input per Cycle</th>
 					<th>Join?</th>
 				</tr>
 				<?php
@@ -61,7 +61,7 @@
 						echo "<tr>
 						<td>".htmlspecialchars($row["Name"],ENT_QUOTES,'UTF-8')."</td>
 						<td>".$value."</td>
-						<td>".$row["CycleDuration"]."</td>
+						<td>".time_format($row["CycleDuration"])."</td>
 						<td>£".money_format("%n",$row["CycleInput"])."</td>
 						<td>";
 						if ($inGroup) {

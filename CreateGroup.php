@@ -99,6 +99,9 @@
 				echo '<script language="javascript">alert("'.$errorReport.'")</script>';
 			}else{
 				$timestamp=time();
+				$duration*=24;
+				$duration=round($duration);
+				$duration/=24
 				$duration*=86400;
 				$sql="INSERT INTO `Groups`(`Name`, `CycleDuration`, `CycleInput`, `LastDeath`) VALUES ('$name','$duration','$input','$timestamp')";
 				if(mysqli_query($con,$sql)){

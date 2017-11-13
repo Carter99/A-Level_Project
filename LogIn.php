@@ -47,7 +47,7 @@
 
 	<?php 
 		if($_SERVER["REQUEST_METHOD"]=="POST"){
-			$email=$_POST["email"];
+			$email=htmlspecialchars($_POST["email"],ENT_QUOTES,'UTF-8');
 			$password=$_POST["password"];
 
 
@@ -55,14 +55,13 @@
 			if(empty($email)||empty($password)){
 				echo '<script language="javascript">alert("Invalid LogIn:\nOne or more of the required fields was left empty...\n\nPlease try again.")</script>';
 			}else{
-				$sql="SELECT * FROM `Users`";
+				$sql="SELECT * FROM `Users` WHERE `Email`='".$email."'AND `Password`='".hash("sha512",$password)."'";
 				$results=mysqli_query($con,$sql);
-				while ($row=mysqli_fetch_assoc($results)) {
-					if(($row["Email"]==$email)&&($row["Password"]==hash("sha512",$password))){
-						session_start();
-						$_SESSION["ID"]=$row["ID"];
-						header("Location: Dashboard.php");
-					}
+				$row=mysqli_fetch_assoc($results);
+				if (isset($row['ID'])){
+					session_start();
+					$_SESSION["ID"]=$row["ID"];
+					header("Location: Dashboard.php");
 				}
 				echo '<script language="javascript">alert("Invalid LogIn:\nAt least one of the log in details was incorrect...\n\nPlease try again.")</script>';
 			}
