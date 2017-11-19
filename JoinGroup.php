@@ -32,7 +32,7 @@
 	<div style="background-color: #eee; min-height: 100vh; width: 100vw; position: absolute;">
 
 		<div style="padding-left: 15px; padding-right: 15px;">
-		<h1><u>Join Group</u></h1>
+			<h1><u>Join Group</u></h1>
 			<table>
 				<tr>
 					<td style="font-size: 20px; text-align: center;" colspan="5">Please Select Any Groups To Join</td>

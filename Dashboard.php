@@ -45,11 +45,14 @@
 			 ?>
 			 <table>
 			 	<tr>
-			 		<td style="font-size: 20px; text-align: center;" colspan="2">My groups</td>
+			 		<td style="font-size: 20px; text-align: center;" colspan="5">My groups</td>
 			 	</tr>
 			 	<tr>
 			 		<th>Group Name</th>
 			 		<th>Time Since Last Death</th>
+			 		<th>Potential Loss</th>
+			 		<th>Potential Win</th>
+			 		<th>Jump to Group</th>
 			 	</tr>
 			 	<?php
 			 		$sql="SELECT * FROM `Memberships` WHERE `UserID`=".$_SESSION["ID"];
@@ -58,7 +61,18 @@
 						$sql2="SELECT * FROM `Groups` WHERE `ID`=".$row["GroupID"];
 						$results2=mysqli_query($con,$sql2);
 						$groupInfo=mysqli_fetch_assoc($results2);
-						$lastDeath=time_format(time()-$groupInfo["LastDeath"]);
+						
+						$lastDeathSeconds=time()-$groupInfo["LastDeath"];
+						$lastDeath=time_format($lastDeathSeconds);
+						$cyclesSinceDeath=floor($lastDeathSeconds/$groupInfo["CycleDuration"]);
+						$singlePerson=$cyclesSinceDeath*$groupInfo['CycleInput'];
+
+						$sql3="SELECT * FROM `Memberships` WHERE `GroupID`=".$row["GroupID"];
+						$results3=mysqli_query($con,$sql3);
+						$peopleInGroup=mysqli_num_rows($results3)-1;
+
+						$testLink="GroupPage.php?Group=".$row["GroupID"];
+
 						echo "
 						<tr>
 							<td>
@@ -67,13 +81,21 @@
 							<td>
 								".$lastDeath."
 							</td>
+							<td>
+								£".money_format("%n",$singlePerson)."
+							</td>
+							<td>
+								£".money_format("%n",$peopleInGroup*$singlePerson)."
+							</td>
+							<td>
+								<button style='width:100%;' onclick='location.href=\"$testLink\";' >click to jump</button>
+							</td>
 						</tr>";
 					}
 			 	?>
 			 </table>
 
-			 <p>START OF TEXT<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>END OF TEXT</p>
-
+			
 		</div>
 
 	</div>
