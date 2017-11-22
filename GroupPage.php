@@ -12,13 +12,17 @@
 	if ($member==0){
 		header("Location: Dashboard.php");
 	}
+
+	$sql2="SELECT * FROM `Groups` WHERE `ID`=".$group;
+	$results2=mysqli_query($con,$sql2);
+	$groupInfo=mysqli_fetch_assoc($results2);
  ?>
 
 <!DOCTYPE html>
 <html>
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,700" rel="stylesheet">
-	<title>Join Group</title>
+	<title><?php echo $groupInfo["Name"] ?></title>
 </head>
 <link rel="stylesheet" type="text/css" href="TopMenuBar.css" />
 <script src="Dynamics.js"></script>
@@ -40,8 +44,10 @@
 	<div style="background-color: #eee; min-height: 100vh; width: 100vw; position: absolute;">
 
 		<div style="padding-left: 15px; padding-right: 15px;">
-			<h1><u>Group <?php echo $group ?></u></h1>
-
+			<h1><u><?php echo $groupInfo["Name"] ?></u></h1>
+			<?php 
+				$sql3=5;
+			?>
 		</div>
 
 	</div>
