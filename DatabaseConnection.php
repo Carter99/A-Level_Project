@@ -17,7 +17,6 @@
 			}
 			$message.=", ";
 		}
-
 		$message.=$hours." hour";
 		if ($hours!=1) {
 			$message.="s";

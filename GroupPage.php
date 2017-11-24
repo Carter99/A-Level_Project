@@ -45,9 +45,37 @@
 
 		<div style="padding-left: 15px; padding-right: 15px;">
 			<h1><u><?php echo $groupInfo["Name"] ?></u></h1>
-			<?php 
-				$sql3=5;
-			?>
+			<table>
+				<tr>
+			 		<td style="font-size: 20px; text-align: center;" colspan="2">My Selection</td>
+			 	</tr>
+				<tr>
+					<th>Celebrity Name</th>
+					<th>Time On List</th>
+				</tr>
+				<?php
+					$numOfRows=$groupInfo["MaxSelect"];
+					$sql="SELECT * FROM `Selection` WHERE `GroupID`=".$group." AND `UserID`=".$user;
+					$results=mysqli_query($con,$sql);
+					while ($row=mysqli_fetch_assoc($results)) {
+						$numOfRows-=1;
+						echo 
+						"<tr>
+							<td>".$row["CelebrityID"]."</td>
+							<td>".$row["UnixTime"]."</td>
+						</tr>"; ## ADD CODE TO DISPLAY THE NAME INFORMATION OF THE CELEBRITY AND TO DISPLAY THE TIME SINCE THE LAST DEATH
+					}
+					while ($numOfRows>0) {
+						$numOfRows-=1;
+						echo 
+						"<tr>
+							<td><input type='text' name='selection'></td>
+							<td><button style='width:100%;'>click to add</button></td>
+						</tr>";
+					}
+					## ADD CODE TO DISPLAY THE INFORMATION OF THE OTHER PEOPLE IN THE GROUP 
+				?>
+			</table>
 		</div>
 
 	</div>

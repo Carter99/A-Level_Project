@@ -4,7 +4,7 @@
 		header("Location:LogIn.php");
 	}
 	include("DatabaseConnection.php");
- ?>
+?>
 
 <!DOCTYPE html>
 <html>
@@ -45,6 +45,21 @@
 					<th>Join?</th>
 				</tr>
 				<?php
+					if($_SERVER["REQUEST_METHOD"]=="POST"){
+						$joining=$_POST["Joining"];
+						$user=$_SESSION["ID"];
+
+						$sql="SELECT * FROM `Memberships` WHERE `GroupID`=".$joining." AND `UserID`=".$user;
+						$results=mysqli_query($con,$sql);
+						$row=mysqli_fetch_assoc($results);
+						if (!isset($row['GroupID'])){
+							$sql="INSERT INTO `Memberships` VALUES ('$joining','$user')";
+							if(!mysqli_query($con,$sql)){
+								echo '<script language="javascript">alert("An error occured, please try again...")</script>';
+							}
+						}
+					}
+
 					$sql="SELECT * FROM `Groups`";
 			 		$results=mysqli_query($con,$sql);
 					while ($row=mysqli_fetch_assoc($results)) {
@@ -58,6 +73,8 @@
 								break;
 							}
 						}
+
+
 						echo "<tr>
 						<td>".htmlspecialchars($row["Name"],ENT_QUOTES,'UTF-8')."</td>
 						<td>".$value."</td>
@@ -76,16 +93,6 @@
 						echo "
 						</td>
 						</tr>";
-					}
-					if($_SERVER["REQUEST_METHOD"]=="POST"){
-						$joining=$_POST["Joining"];
-						$user=$_SESSION["ID"];
-						$sql="INSERT INTO `Memberships` VALUES ('$joining','$user')";
-						if(mysqli_query($con,$sql)){
-							header("Refresh:0"); 
-						}else{
-							echo '<script language="javascript">alert("An error occured, please try again...")</script>';
-						}
 					}
 				?>
 			</table>

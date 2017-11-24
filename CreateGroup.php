@@ -43,7 +43,10 @@
 					<input type="number" min="0.00" step="0.01" name="Input" placeholder="eg: 0.42"><br>
 					<br>
 					Cycle Duration (days):<br>
-					<input type="number" min="1" step="1" name="Duration" placeholder="eg: 7"><br>
+					<input type="number" step="0.25" name="Duration" placeholder="eg: 7"><br>
+					<br>
+					Max Celebrities:<br>
+					<input type="number" min="1" step="1" name="Max" placeholder="eg: 5"><br>
 					<br>
 					<button>Create Group</button>
 				</form>
@@ -57,10 +60,11 @@
 			$name=htmlspecialchars($_POST["Name"],ENT_QUOTES,'UTF-8');
 			$input=$_POST["Input"];
 			$duration=$_POST["Duration"];
+			$max=$_POST["Max"];
 			$errorReport="Invalid LogIn:";
 			$hasError=false;
 
-			if(empty($name)||empty($input)||empty($duration)){
+			if(empty($name)||empty($input)||empty($duration)||empty($max)){
 				$hasError=true;
 				$errorReport.="\\nOne or more of the required fields was left empty.";
 			}else{
@@ -85,13 +89,25 @@
 					$hasError=true;
 					$errorReport.="\\nThe value input per cycle is too high.";
 				}
-				if ($duration<1){
+				if ($duration<0.25){
 					$hasError=true;
-					$errorReport.="\\nThe cycle duration can not be less than 1 day.";
+					$errorReport.="\\nThe cycle duration can not be less than 6 hours.";
 				}
 				if ($duration>365){
 					$hasError=true;
 					$errorReport.="\\nThe cycle duration can not be more than 1 year.";
+				}
+				if (round($max)!=$max) {
+					$hasError=true;
+					$errorReport.="\\nThe number of celebrites must be an integer.";
+				}
+				if ($max<1) {
+					$hasError=true;
+					$errorReport.="\\nThe Number of celebrites needs to be at least 1.";
+				}
+				if ($max>15) {
+					$hasError=true;
+					$errorReport.="\\nWoah don't go overboard with the number of people that each person can select, the maximum has been set to 15.";
 				}
 			}
 			if ($hasError){
@@ -99,11 +115,12 @@
 				echo '<script language="javascript">alert("'.$errorReport.'")</script>';
 			}else{
 				$timestamp=time();
-				$duration*=24;
+				$duration*=4;
 				$duration=round($duration);
-				$duration/=24;
+				$duration/=4;
 				$duration*=86400;
-				$sql="INSERT INTO `Groups`(`Name`, `CycleDuration`, `CycleInput`, `LastDeath`) VALUES ('$name','$duration','$input','$timestamp')";
+				$sql="INSERT INTO `Groups`(`Name`, `CycleDuration`, `CycleInput`, `LastDeath`, `MaxSelect`) VALUES ('$name','$duration','$input','$timestamp','$max')";
+
 				if(mysqli_query($con,$sql)){
 					$sql="SELECT * FROM `Groups` WHERE `Name`='".$name."'";
 					$results=mysqli_query($con,$sql);

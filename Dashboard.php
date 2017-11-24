@@ -42,10 +42,13 @@
 				echo "<br>Your name is: ".$user_info["Name"];
 				echo "<br>Date and time of you joining: ".date("d-m-Y @ g:i a",$user_info["UNIXJoined"]);
 				echo "<br>Your Balance, by comparison to when you created your account is: £".money_format("%n", $user_info["Balance"]);
+
+				$sql="SELECT * FROM `Memberships` WHERE `UserID`=".$_SESSION["ID"];
+			 	$results=mysqli_query($con,$sql);
 			 ?>
 			 <table>
 			 	<tr>
-			 		<td style="font-size: 20px; text-align: center;" colspan="5">My groups</td>
+			 		<td style="font-size: 20px; text-align: center;" colspan="5">My Groups (<?php echo(mysqli_num_rows($results))?> Active)</td>
 			 	</tr>
 			 	<tr>
 			 		<th>Group Name</th>
@@ -55,8 +58,6 @@
 			 		<th>Jump to Group</th>
 			 	</tr>
 			 	<?php
-			 		$sql="SELECT * FROM `Memberships` WHERE `UserID`=".$_SESSION["ID"];
-			 		$results=mysqli_query($con,$sql);
 					while ($row=mysqli_fetch_assoc($results)) {
 						$sql2="SELECT * FROM `Groups` WHERE `ID`=".$row["GroupID"];
 						$results2=mysqli_query($con,$sql2);

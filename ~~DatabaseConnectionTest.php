@@ -42,6 +42,8 @@
 
 				date_default_timezone_set('UTC');
 				echo(date("d-m-Y @ g:i a",$t));
+				echo "<br>";
+				echo (phpversion());
 			 ?>
 
 		 </table>
