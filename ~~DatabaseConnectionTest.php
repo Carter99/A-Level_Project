@@ -44,6 +44,15 @@
 				echo(date("d-m-Y @ g:i a",$t));
 				echo "<br>";
 				echo (phpversion());
+				echo "<br><br>";
+
+				$selection="https://en.wikipedia.org/wiki/Slava_Polunin";
+				$position=strpos($selection,"en.wikipedia.org/wiki/d");
+				if ($position) {
+					echo("it's there!");
+				}else{
+					echo "It's not in there";
+				}
 			 ?>
 
 		 </table>
