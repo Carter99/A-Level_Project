@@ -36,9 +36,26 @@ connection = pymysql.connect(host='localhost',
 try:
     with connection.cursor() as cursor:
         # Read a single record
-        sql = "SELECT * FROM `Users`"
+        sql = "SELECT `Wiki_Name` FROM `Celebrities` WHERE `dead`=0"
         cursor.execute(sql)
         result = cursor.fetchall()
         print(result)
 finally:
     connection.close()
+
+
+
+
+
+import urllib.request, json
+def json_retrieval(call):
+	with urllib.request.urlopen(call) as url:
+	    data = json.loads(url.read().decode())
+	    print(data)
+
+json_retrieval("http://maps.googleapis.com/maps/api/geocode/json?address=google")
+
+
+
+	
+json_retrieval("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection&format=json&titles=Theresa_May")

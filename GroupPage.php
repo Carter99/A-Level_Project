@@ -60,22 +60,32 @@
 						if ($position) {
 							$position+=22;
 							$wikiName=substr($selection,$position);
-							echo '<script language="javascript">alert("'.$wikiName.'")</script>';
 
-							$sql="SELECT * FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `Selection`.`GroupID`=".$group." AND `Celebrities`.`Wiki_Name`='".$wikiName."'";
+							$sql="SELECT * FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `Selection`.`GroupID`='$group' AND `Celebrities`.`Wiki_Name`='$wikiName'";
 
 							$results=mysqli_query($con,$sql);
 							$row=mysqli_fetch_assoc($results);
-							if (isset($row['Name'])) {
+							if (isset($row['Wiki_Name'])) {
 								echo '<script language="javascript">alert("It would appear that this person is, or at least was at some stage, already selected by either you or another member of your group. Please select another person and try again.")</script>';
 							}else{
-								$sql2="SELECT * FROM `Celebrities` WHERE `Wiki_Name`='".$wikiName."'";
-								$results2=mysqli_query($con,$sql2);
-								$row2=mysqli_fetch_assoc($results2);
-								if (isset($row2['Wiki_Name'])) {
-									echo '<script language="javascript">alert("Celebrity is already known")</script>';
-								}else{
-									echo '<script language="javascript">alert("Celebrity is not already known")</script>';
+								$sql="SELECT * FROM `Celebrities` WHERE `Wiki_Name`='$wikiName'";
+								$results=mysqli_query($con,$sql);
+								$row=mysqli_fetch_assoc($results);
+								if (!isset($row['Wiki_Name'])) {
+									$adjustedName=str_replace("_"," ",$wikiName);
+									$sql="INSERT INTO `Celebrities`(`Name`,`Wiki_Name`) VALUES ('$adjustedName','$wikiName')";
+									if(!mysqli_query($con,$sql)){
+										echo '<script language="javascript">alert("An error occured, please try again...")</script>';
+									}
+								}
+								$sql="SELECT * FROM `Celebrities` WHERE `Wiki_Name`='$wikiName'";
+								$results=mysqli_query($con,$sql);
+								$row=mysqli_fetch_assoc($results);
+								$celebrityID=$row["ID"];
+								$time=time();
+								$sql = "INSERT INTO `Selection`(`GroupID`, `UserID`, `CelebrityID`, `UnixTime`) VALUES ('$group','$user','$celebrityID','$time')";
+								if(!mysqli_query($con,$sql)){
+									echo '<script language="javascript">alert("An error occured, please try again...")</script>';
 								}
 							}
 
@@ -85,7 +95,7 @@
 						}
 					}
 					$numOfRows=$groupInfo["MaxSelect"];
-					$sql="SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `GroupID`=".$group." AND `UserID`=".$user;
+					$sql="SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `GroupID`='$group' AND `UserID`='$user'";
 					$results=mysqli_query($con,$sql);
 					while ($row=mysqli_fetch_assoc($results)) {
 						$numOfRows-=1;
@@ -113,8 +123,8 @@
 						</tr>";
 					}
 					echo "</table>";
-					## ADD CODE TO DISPLAY THE INFORMATION OF THE OTHER PEOPLE IN THE GROUP 
-					$sql = "SELECT `Users`.`ID`, `Users`.`Name` FROM `Users` INNER JOIN `Memberships` ON `Memberships`.`UserID`=`Users`.`ID` WHERE `Memberships`.`GroupID`=".$group." AND `Memberships`.`UserID`<>".$user." ORDER BY `Users`.`Name` ASC";
+					
+					$sql = "SELECT `Users`.`ID`, `Users`.`Name` FROM `Users` INNER JOIN `Memberships` ON `Memberships`.`UserID`=`Users`.`ID` WHERE `Memberships`.`GroupID`='$group' AND `Memberships`.`UserID`<>'$user' ORDER BY `Users`.`Name` ASC";
 					$results=mysqli_query($con,$sql);
 					
 					while ($row=mysqli_fetch_assoc($results)) {
@@ -125,8 +135,6 @@
 							<tr>
 								<td style=\"font-size: 20px; text-align: center;\" colspan=\"2\">".$row["Name"]."'s Selection</td>
 							</tr>";
-						
-						//$sql2="SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `Selection`.`GroupID`=".$group." AND `Selection`.`UserID`=".$row["Name"];
 						$sql2 = "SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `Selection`.`GroupID`=$group AND `Selection`.`UserID`=$tmp";
 						$results2=mysqli_query($con,$sql2);
 						$numOfRows=$groupInfo["MaxSelect"];
@@ -148,6 +156,7 @@
 						echo "</table>";
 					}
 				?>
+				<br>
 			</table>
 		</div>
 

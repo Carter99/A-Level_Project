@@ -95,8 +95,11 @@
 					}
 			 	?>
 			 </table>
-
-			
+			 <br>
+			 <h3>Events</h3>
+			 <?php
+			 	
+			 ?>
 		</div>
 
 	</div>
