@@ -1,0 +1,1 @@
+cd /Library/WebServer/Documents/DEATHLIST/; Python3 DataRetrievalAndProcessing.py;

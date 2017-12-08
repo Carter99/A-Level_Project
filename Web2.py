@@ -83,7 +83,7 @@ def find_normalised(JSON):
 	print(name_normalisation)
 	return name_normalisation
 		
-
+'''
 
 #find_normalised(json_return)
 
@@ -139,5 +139,5 @@ get_list_of_people=people_splitter(People)
 
 
 find_normalised(json_return)
-
+'''
 

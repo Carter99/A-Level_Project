@@ -1,6 +1,6 @@
-import json, math, urllib.request, time, pymysql.cursors
+import json, urllib.request, time, pymysql.cursors
 
-blockLength=5        ## DO NOT INCREASE BEYOND 50 ##
+blockLength=3    ## DO NOT INCREASE BEYOND 50 ##
 prefix="https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection&format=json&titles="
 
 def database_connection():
@@ -98,18 +98,7 @@ results=retrieve_alive_names(connection)
 people=dictionary_value_unzip(results)
 blocks=people_split(people,blockLength)
 
-
 for requestBlock in blocks:
-	#request=request_string(requestBlock,"https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection&format=json&titles=")
-	request="http://maps.googleapis.com/maps/api/geocode/json?address=google"
-	json=json_retrieval(request)
-	print(request,"\n\n\n")
-
-
-
-
-
-################# THE TESTING ZONE #################
-
-#print(people_split(People,blockLength))
-#dictionary_value_unzip([{'Wiki_Name': 'Slava_Polunin'}, {'Wiki_Name': 'Elon_Musk'}, {'Wiki_Name': 'Donald_Trump'}, {'Wiki_Name': 'John_le_Carré'}, {'Wiki_Name': 'Kanye_West'}, {'Wiki_Name': 'Jack_Robinson_(footballer,_born_1993)'}, {'Wiki_Name': 'Theresa_May'}])
+	request=request_string(requestBlock,prefix)
+	JSON=json_retrieval(request)
+	print(JSON)
