@@ -1,6 +1,6 @@
-import json, urllib.request, time, pymysql.cursors
+import json, math, urllib.request, time, pymysql.cursors
 
-blockLength=3    ## DO NOT INCREASE BEYOND 50 ##
+blockLength=7    ## DO NOT INCREASE BEYOND 50 ##
 prefix="https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection&format=json&titles="
 
 def database_connection():
@@ -18,12 +18,12 @@ def database_connection():
 
 def retrieve_alive_names(connectionPath):
 	try:
-	    with connectionPath.cursor() as cursor:
-	        sql = "SELECT `Wiki_Name` FROM `Celebrities` WHERE `dead`=0"
-	        cursor.execute(sql)
-	        return cursor.fetchall()
+		with connectionPath.cursor() as cursor:
+			sql = "SELECT `Wiki_Name` FROM `Celebrities` WHERE `dead`=0"
+			cursor.execute(sql)
+			return cursor.fetchall()
 	finally:
-	    connectionPath.close()
+		connectionPath.close()
 	#
 	# Parameter(s):
 	#	- connectionPath: open path to connect to the DEATHLIST 
@@ -50,7 +50,7 @@ def dictionary_value_unzip(dictArray):
 	#################################################################
 
 def people_split(array,length):
-	return[array[i*length:(i+1)*length]for i in range((len(array)//length)+1)]
+	return[array[i*length:(i+1)*length]for i in range(math.ceil(len(array)/length))]
 	#
 	# Parameter(s): 
 	# 	- array: 1D array of type strings
@@ -93,12 +93,36 @@ def json_retrieval(call):
 	#	N/a
 	#################################################################
 
+def TOADD():
+	with connection.cursor() as cursor:
+		# Create a new record
+		sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
+		cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
+	connection.commit()
+
 connection=database_connection()
 results=retrieve_alive_names(connection)
 people=dictionary_value_unzip(results)
 blocks=people_split(people,blockLength)
 
+died=[]
+
 for requestBlock in blocks:
 	request=request_string(requestBlock,prefix)
 	JSON=json_retrieval(request)
-	print(JSON)
+	normalisation={dictionary["to"]:dictionary["from"] for dictionary in JSON["query"]["normalized"]}
+
+	pages=JSON["query"]["pages"]
+	for pageid in pages.keys():
+		name=pages[pageid]["title"]
+		try:
+			name=normalisation[name]
+		except KeyError:
+			pass
+		bulk=pages[pageid]["revisions"][0]["*"].lower()
+		print(name,end=": ")
+		print("death date and age|" in bulk)
+		if "death date and age|" in bulk:
+			died+=[name]
+	#print({JSON["query"]["pages"][pageid]["title"]:JSON["query"]["pages"][pageid]["revisions"][0]["*"]})
+print(died)

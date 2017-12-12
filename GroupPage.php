@@ -95,7 +95,7 @@
 						}
 					}
 					$numOfRows=$groupInfo["MaxSelect"];
-					$sql="SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `GroupID`='$group' AND `UserID`='$user'";
+					$sql="SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `GroupID`='$group' AND `UserID`='$user' AND `Celebrities`.`dead`=0";
 					$results=mysqli_query($con,$sql);
 					while ($row=mysqli_fetch_assoc($results)) {
 						$numOfRows-=1;

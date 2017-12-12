@@ -82,11 +82,10 @@ def find_normalised(JSON):
 		name_normalisation+=[[wikipedia_version,plain_english]]
 	print(name_normalisation)
 	return name_normalisation
-		
+
 '''
 
 #find_normalised(json_return)
-
 
 
 

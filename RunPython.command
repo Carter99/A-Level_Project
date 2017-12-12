@@ -1,1 +1,1 @@
-cd /Library/WebServer/Documents/DEATHLIST/; Python3 DataRetrievalAndProcessing.py;
+cd /Library/WebServer/Documents/DEATHLIST/; time Python3 DataRetrievalAndProcessing.py;
