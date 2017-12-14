@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 30, 2017 at 10:46 AM
+-- Generation Time: Dec 14, 2017 at 12:04 PM
 -- Server version: 5.7.20
 -- PHP Version: 7.1.7
 
@@ -43,9 +43,12 @@ INSERT INTO `Celebrities` (`ID`, `Name`, `Wiki_Name`, `dead`) VALUES
 (1, 'Slava Polunin', 'Slava_Polunin', 0),
 (2, 'Elon Musk', 'Elon_Musk', 0),
 (3, 'Donald Trump', 'Donald_Trump', 0),
-(4, 'John le Carré', 'John_le_Carré', 0),
+(4, 'Stephen Hawking', 'Stephen_Hawking', 0),
 (5, 'Kanye West', 'Kanye_West', 0),
-(6, 'Jack Robinson (footballer, born 1993)', 'Jack_Robinson_(footballer,_born_1993)', 0);
+(6, 'Jack Robinson (footballer, born 1993)', 'Jack_Robinson_(footballer,_born_1993)', 0),
+(7, 'Theresa May', 'Theresa_May', 0),
+(8, 'Carrie Fisher', 'Carrie_Fisher', 0),
+(9, 'Keith Chegwin', 'Keith_Chegwin', 0);
 
 -- --------------------------------------------------------
 
@@ -157,7 +160,14 @@ INSERT INTO `Selection` (`GroupID`, `UserID`, `CelebrityID`, `UnixTime`) VALUES
 (17, 1, 3, 1511991640),
 (17, 2, 4, 1511995353),
 (20, 19, 5, 1512036266),
-(20, 19, 6, 1512036301);
+(20, 19, 6, 1512036301),
+(17, 1, 7, 1512058186),
+(2, 1, 8, 1513012746),
+(2, 1, 3, 1513030325),
+(21, 1, 9, 1513188480),
+(23, 1, 9, 1513188661),
+(20, 1, 8, 1513188694),
+(17, 2, 8, 1513188714);
 
 -- --------------------------------------------------------
 
@@ -221,7 +231,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Celebrities`
 --
 ALTER TABLE `Celebrities`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `Groups`

@@ -96,6 +96,7 @@
 			 	?>
 			 </table>
 			 <br>
+			 <hr>
 			 <h3>Events</h3>
 			 <?php
 			 	

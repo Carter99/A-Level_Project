@@ -1,6 +1,6 @@
-import json, math, urllib.request, time, pymysql.cursors
+import json, math, urllib.request, time, pymysql.cursors, random
 
-blockLength=7    ## DO NOT INCREASE BEYOND 50 ##
+blockLength=50    ## DO NOT INCREASE BEYOND 50 ##
 prefix="https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&rvsection&format=json&titles="
 
 def database_connection():
@@ -16,14 +16,13 @@ def database_connection():
 	#	my DEATHLIST database.
 	#################################################################
 
-def retrieve_alive_names(connectionPath):
+def retrieve_all(connectionPath,sql):
 	try:
 		with connectionPath.cursor() as cursor:
-			sql = "SELECT `Wiki_Name` FROM `Celebrities` WHERE `dead`=0"
 			cursor.execute(sql)
 			return cursor.fetchall()
-	finally:
-		connectionPath.close()
+	except:
+		pass
 	#
 	# Parameter(s):
 	#	- connectionPath: open path to connect to the DEATHLIST 
@@ -93,36 +92,67 @@ def json_retrieval(call):
 	#	N/a
 	#################################################################
 
-def TOADD():
-	with connection.cursor() as cursor:
-		# Create a new record
-		sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
-		cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
-	connection.commit()
+def table_update(connectionPath,sql):
+	try:
+		with connectionPath.cursor() as cursor:
+			cursor.execute(sql)
+		connectionPath.commit()
+	except:
+		pass
 
-connection=database_connection()
-results=retrieve_alive_names(connection)
-people=dictionary_value_unzip(results)
-blocks=people_split(people,blockLength)
+try:
+	while True:
+		startTime=time.time()
+		connection=database_connection()
+		sql = "SELECT `Wiki_Name` FROM `Celebrities` WHERE `dead`=0"
+		results=retrieve_all(connection,sql)
+		people=dictionary_value_unzip(results)
+		blocks=people_split(people,blockLength)
 
-died=[]
+		died=[]
 
-for requestBlock in blocks:
-	request=request_string(requestBlock,prefix)
-	JSON=json_retrieval(request)
-	normalisation={dictionary["to"]:dictionary["from"] for dictionary in JSON["query"]["normalized"]}
+		for requestBlock in blocks:
+			request=request_string(requestBlock,prefix)
+			JSON=json_retrieval(request)
+			normalisation={dictionary["to"]:dictionary["from"] for dictionary in JSON["query"]["normalized"]}
 
-	pages=JSON["query"]["pages"]
-	for pageid in pages.keys():
-		name=pages[pageid]["title"]
-		try:
-			name=normalisation[name]
-		except KeyError:
-			pass
-		bulk=pages[pageid]["revisions"][0]["*"].lower()
-		print(name,end=": ")
-		print("death date and age|" in bulk)
-		if "death date and age|" in bulk:
-			died+=[name]
-	#print({JSON["query"]["pages"][pageid]["title"]:JSON["query"]["pages"][pageid]["revisions"][0]["*"]})
-print(died)
+			pages=JSON["query"]["pages"]
+			for pageid in pages.keys():
+				name=pages[pageid]["title"]
+				try:
+					name=normalisation[name]
+				except KeyError:
+					pass
+				bulk=pages[pageid]["revisions"][0]["*"].lower()
+				if "death date and age|" in bulk:
+					died+=["'"+name+"'"]
+
+		random.shuffle(died)
+
+		currentTime=time.time()
+		for person in died:
+			sql="UPDATE `Celebrities` SET `dead`=1 WHERE `Wiki_Name`="+person
+			table_update(connection,sql)
+			sql="SELECT `Selection`.`GroupID`, `Selection`.`UserID`, `Groups`.`LastDeath`, `Groups`.`CycleDuration`, `Groups`.`CycleInput`, `Celebrities`.`ID` FROM `Selection` INNER JOIN `Celebrities` ON `Celebrities`.`ID` = `Selection`.`CelebrityID` INNER JOIN `Groups` ON `Groups`.`ID` = `Selection`.`GroupID` WHERE `Celebrities`.`Wiki_Name` ="+person
+			results=retrieve_all(connection,sql)
+			print(person+" died @ "+str(currentTime)+", affecting "+str(len(results))+" groups.")
+			for applicableGroup in results:
+				perPersonPayout=((currentTime-applicableGroup["LastDeath"])//applicableGroup["CycleDuration"])*applicableGroup["CycleInput"]
+				sql="SELECT `UserID` FROM `Memberships` WHERE `GroupID`="+str(applicableGroup["GroupID"])+" AND `UserID`<>"+str(applicableGroup["UserID"])
+				results2=retrieve_all(connection,sql)
+				winnings=perPersonPayout*len(results2)
+				sql="INSERT INTO `Payouts`(`GroupID`, `UserID`, `PayTo`, `CelebID`, `UnixTime`, `Amount`) VALUES ("+str(applicableGroup["GroupID"])+",-1,"+str(applicableGroup["UserID"])+","+str(applicableGroup["ID"])+","+str(currentTime)+","+str(winnings)+")"
+				table_update(connection,sql)
+				for members in results2:
+					sql="INSERT INTO `Payouts`(`GroupID`, `UserID`, `PayTo`, `CelebID`, `UnixTime`, `Amount`) VALUES ("+str(applicableGroup["GroupID"])+","+str(members["UserID"])+","+str(applicableGroup["UserID"])+","+str(applicableGroup["ID"])+","+str(currentTime)+","+str(-perPersonPayout)+")"
+					table_update(connection,sql)
+				sql="UPDATE `Groups` SET `LastDeath`="+str(currentTime)+" WHERE `ID`="+str(applicableGroup["GroupID"])
+				table_update(connection,sql)
+		connection.close()
+		activeTime=time.time()-startTime
+		print("loop completed in "+str(activeTime)+" seconds.")
+		time.sleep(30) #RAISE TO LIKE 5 MINS OR SOMETHING!
+except KeyboardInterrupt:
+	print("\nMANUAL KILL COMMENCED - PROGRAM SHUT DOWN")
+except:
+	print("\nUNKNOWN ERROR - PROGRAM SHUT DOWN")
