@@ -35,14 +35,6 @@
 		<div style="padding-left: 15px; padding-right: 15px;">
 			<h1><u>Dashboard</u></h1>
 			<?php 
-				$sql="SELECT * FROM `Users` WHERE `ID`=".$_SESSION["ID"];
-				$results=mysqli_query($con,$sql);
-				$user_info=mysqli_fetch_assoc($results);
-				echo "Your user ID is: ".$user_info["ID"];
-				echo "<br>Your name is: ".$user_info["Name"];
-				echo "<br>Date and time of you joining: ".date("d-m-Y @ g:i a",$user_info["UNIXJoined"]);
-				echo "<br>Your Balance, by comparison to when you created your account is: £".money_format("%n", $user_info["Balance"]);
-
 				$sql="SELECT * FROM `Memberships` WHERE `UserID`=".$_SESSION["ID"];
 			 	$results=mysqli_query($con,$sql);
 			 ?>
@@ -99,7 +91,15 @@
 			 <hr>
 			 <h3>Events</h3>
 			 <?php
-			 	
+			 	$sql="SELECT `Payouts`.`Amount`, `Payouts`.`UnixTime`, `Groups`.`Name`, `Payouts`.`UserID`, `Users`.`Name` AS 'User', `Celebrities`.`Name` AS 'Celebrity' FROM `Payouts` INNER JOIN `Groups` ON `Groups`.`ID` = `Payouts`.`GroupID` INNER JOIN `Celebrities` ON `Celebrities`.`ID`=`Payouts`.`CelebID` INNER JOIN `Users` ON `Users`.`ID`=`Payouts`.`PayTo` WHERE `UserID`=".$_SESSION["ID"]." OR (`UserID`=-1 AND `PayTo`=".$_SESSION["ID"].") ORDER BY `Payouts`.`UnixTime` DESC";
+				$ledger_Results=mysqli_query($con,$sql);
+			 	while($row=mysqli_fetch_assoc($ledger_Results)){
+					if ($row["UserID"]==-1) {
+						echo "<i>[".date('d/m/Y @ H:i',$row["UnixTime"])."]:</i> You have won <b>£".money_format("%n",$row["Amount"])."</b> from the death of <b>".$row["Celebrity"]."</b> within the group: '<b>".$row["Name"]."</b>'.<br>";
+					}else{
+						echo "<i>[".date('d/m/Y @ H:i',$row["UnixTime"])."]:</i> You owe <b>".$row["User"]."</b> the sum of <b>£".money_format("%n",-$row["Amount"])."</b> for the death of <b>".$row["Celebrity"]."</b> within the group: '<b>".$row["Name"]."</b>'.<br>";
+					}
+			 	}
 			 ?>
 		</div>
 

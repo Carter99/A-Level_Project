@@ -100,6 +100,7 @@ def table_update(connectionPath,sql):
 	except:
 		pass
 
+loopNumber=0
 try:
 	while True:
 		startTime=time.time()
@@ -150,8 +151,9 @@ try:
 				table_update(connection,sql)
 		connection.close()
 		activeTime=time.time()-startTime
-		print("loop completed in "+str(activeTime)+" seconds.")
-		time.sleep(30) #RAISE TO LIKE 5 MINS OR SOMETHING!
+		print("["+str(loopNumber)+"]: loop completed in "+str(activeTime)+" seconds.")
+		loopNumber+=1
+		time.sleep(300) #RAISE TO LIKE 5 MINS OR SOMETHING!
 except KeyboardInterrupt:
 	print("\nMANUAL KILL COMMENCED - PROGRAM SHUT DOWN")
 except:

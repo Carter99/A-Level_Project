@@ -158,6 +158,16 @@
 				?>
 				<br>
 			</table>
+			<hr>
+			<h3>Events</h3>
+			<?php
+				$sql="SELECT `Payouts`.`UnixTime`, `Users`.`Name` AS 'Username', `Celebrities`.`Name`, `Payouts`.`Amount` FROM `Payouts` INNER JOIN `Celebrities` ON `Celebrities`.`ID` = `Payouts`.`CelebID` INNER JOIN `Users` ON `Payouts`.`PayTo`=`Users`.`ID` WHERE `Payouts`.`UserID` = -1 AND `Payouts`.`GroupID` =".$group." ORDER BY `Payouts`.`UnixTime` DESC";
+				$ledger_Results=mysqli_query($con,$sql);
+			 	while($row=mysqli_fetch_assoc($ledger_Results)){
+			 		echo "<i>[".date('d/m/Y @ H:i',$row["UnixTime"])."]:</i> <b>".$row["Username"]."</b> won <b>£".money_format("%n",$row["Amount"])."</b> for the death of <b>".$row["Name"]."</b>.<br>";
+			 	}
+			?>
+			<br>
 		</div>
 
 	</div>
