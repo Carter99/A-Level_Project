@@ -135,7 +135,7 @@
 							<tr>
 								<td style=\"font-size: 20px; text-align: center;\" colspan=\"2\">".$row["Name"]."'s Selection</td>
 							</tr>";
-						$sql2 = "SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `Selection`.`GroupID`=$group AND `Selection`.`UserID`=$tmp";
+						$sql2 = "SELECT `Celebrities`.`Name`, `Selection`.`UnixTime` FROM `Selection` INNER JOIN `Celebrities` ON `Selection`.`CelebrityID`=`Celebrities`.`ID` WHERE `Selection`.`GroupID`=$group AND `Selection`.`UserID`=$tmp AND `Celebrities`.`dead`=0";
 						$results2=mysqli_query($con,$sql2);
 						$numOfRows=$groupInfo["MaxSelect"];
 						while ($row2=mysqli_fetch_assoc($results2)) {

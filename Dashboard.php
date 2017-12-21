@@ -86,11 +86,11 @@
 						</tr>";
 					}
 			 	?>
-			 </table>
-			 <br>
-			 <hr>
-			 <h3>Events</h3>
-			 <?php
+			</table>
+			<br>
+			<hr>
+			<h3>Events</h3>
+			<?php
 			 	$sql="SELECT `Payouts`.`Amount`, `Payouts`.`UnixTime`, `Groups`.`Name`, `Payouts`.`UserID`, `Users`.`Name` AS 'User', `Celebrities`.`Name` AS 'Celebrity' FROM `Payouts` INNER JOIN `Groups` ON `Groups`.`ID` = `Payouts`.`GroupID` INNER JOIN `Celebrities` ON `Celebrities`.`ID`=`Payouts`.`CelebID` INNER JOIN `Users` ON `Users`.`ID`=`Payouts`.`PayTo` WHERE `UserID`=".$_SESSION["ID"]." OR (`UserID`=-1 AND `PayTo`=".$_SESSION["ID"].") ORDER BY `Payouts`.`UnixTime` DESC";
 				$ledger_Results=mysqli_query($con,$sql);
 			 	while($row=mysqli_fetch_assoc($ledger_Results)){
@@ -100,7 +100,7 @@
 						echo "<i>[".date('d/m/Y @ H:i',$row["UnixTime"])."]:</i> You owe <b>".$row["User"]."</b> the sum of <b>£".money_format("%n",-$row["Amount"])."</b> for the death of <b>".$row["Celebrity"]."</b> within the group: '<b>".$row["Name"]."</b>'.<br>";
 					}
 			 	}
-			 ?>
+			?>
 		</div>
 
 	</div>

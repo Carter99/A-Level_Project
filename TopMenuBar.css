@@ -53,38 +53,6 @@ table, th, td {
 
 /* --------- --------------------- --------- */
 
-/* --------- MID MENU BAR SELECTOR --------- */
-
-/*
-.midnav {
-  overflow: hidden;
-  background-color: #252525;
-}
-
-.midnav a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  min-width: 300px;
-  max-width: 599px;
-  height: 300px;
-  text-decoration: none;
-  font-size: 40px;
-}
-
-.midnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-.midnav a.active {
-  background-color: #0f58ba;
-    color: white;
-}
-
-/* --------- --------------------- --------- */
-
 /* --------- SPLASH PAGES TEXT BOX --------- */
 .centre{
   position: absolute; 

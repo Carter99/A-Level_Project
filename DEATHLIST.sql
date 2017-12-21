@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 14, 2017 at 12:04 PM
+-- Generation Time: Dec 19, 2017 at 12:57 PM
 -- Server version: 5.7.20
 -- PHP Version: 7.1.7
 
@@ -23,6 +23,9 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
+
+DROP DATABASE DEATHLIST;
+CREATE DATABASE DEATHLIST;
 
 --
 -- Table structure for table `Celebrities`
@@ -47,8 +50,8 @@ INSERT INTO `Celebrities` (`ID`, `Name`, `Wiki_Name`, `dead`) VALUES
 (5, 'Kanye West', 'Kanye_West', 0),
 (6, 'Jack Robinson (footballer, born 1993)', 'Jack_Robinson_(footballer,_born_1993)', 0),
 (7, 'Theresa May', 'Theresa_May', 0),
-(8, 'Carrie Fisher', 'Carrie_Fisher', 0),
-(9, 'Keith Chegwin', 'Keith_Chegwin', 0);
+(8, 'Carrie Fisher', 'Carrie_Fisher', 1),
+(9, 'Keith Chegwin', 'Keith_Chegwin', 1);
 
 -- --------------------------------------------------------
 
@@ -70,12 +73,12 @@ CREATE TABLE `Groups` (
 --
 
 INSERT INTO `Groups` (`ID`, `Name`, `CycleDuration`, `CycleInput`, `LastDeath`, `MaxSelect`) VALUES
-(2, 'group2', 176400, 2, 1510657890, 5),
-(17, 'test group', 86400, 0.5, 1510000000, 3),
-(20, '42', 3628800, 0.42, 1510227692, 6),
-(21, 'bobby', 345600, 0.52, 1510309399, 5),
+(2, 'group2', 176400, 2, 1513346885, 5),
+(17, 'test group', 86400, 0.5, 1513346885, 3),
+(20, '42', 3628800, 0.42, 1513346885, 6),
+(21, 'bobby', 345600, 0.52, 1513285700, 5),
 (22, 'Rapid Fire', 21600, 0.1, 1511523443, 7),
-(23, 'bello', 3628800, 3.14, 1511892159, 7);
+(23, 'bello', 3628800, 3.14, 1513285700, 7);
 
 -- --------------------------------------------------------
 
@@ -137,6 +140,36 @@ CREATE TABLE `Payouts` (
   `Amount` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `Payouts`
+--
+
+INSERT INTO `Payouts` (`GroupID`, `UserID`, `PayTo`, `CelebID`, `UnixTime`, `Amount`) VALUES
+(21, -1, 1, 9, 1513285700, 10.92),
+(21, 17, 1, 9, 1513285700, -3.64),
+(21, 22, 1, 9, 1513285700, -3.64),
+(21, 21, 1, 9, 1513285700, -3.64),
+(23, -1, 1, 9, 1513285700, 6.28),
+(23, 21, 1, 9, 1513285700, -3.14),
+(23, 2, 1, 9, 1513285700, -3.14),
+(2, -1, 1, 8, 1513346885, 70),
+(2, 5, 1, 8, 1513346885, -14),
+(2, 15, 1, 8, 1513346885, -14),
+(2, 18, 1, 8, 1513346885, -14),
+(2, 17, 1, 8, 1513346885, -14),
+(2, 21, 1, 8, 1513346885, -14),
+(20, -1, 1, 8, 1513346885, 3.36),
+(20, 17, 1, 8, 1513346885, -0.84),
+(20, 19, 1, 8, 1513346885, -0.84),
+(20, 20, 1, 8, 1513346885, -0.84),
+(20, 21, 1, 8, 1513346885, -0.84),
+(17, -1, 2, 8, 1513346885, 5),
+(17, 1, 2, 8, 1513346885, -1),
+(17, 17, 2, 8, 1513346885, -1),
+(17, 19, 2, 8, 1513346885, -1),
+(17, 20, 2, 8, 1513346885, -1),
+(17, 21, 2, 8, 1513346885, -1);
+
 -- --------------------------------------------------------
 
 --
@@ -189,16 +222,17 @@ CREATE TABLE `Users` (
 --
 
 INSERT INTO `Users` (`ID`, `Name`, `UNIXJoined`, `Email`, `Password`, `Balance`) VALUES
-(1, 'Connor Carter', 1508857454, 'connor@test_email.com', 'fe0d8456dd3f1a0f68cde11860c34bddce97dcbc20f389f534af8c4c49e225f6307ca16e414ac04c8d67b80821690edceb86f8de0d5286dd37ee562e3dcf2e80', 0),
+(1, 'Connor Carter', 1508857454, 'connor@email.com', 'fe0d8456dd3f1a0f68cde11860c34bddce97dcbc20f389f534af8c4c49e225f6307ca16e414ac04c8d67b80821690edceb86f8de0d5286dd37ee562e3dcf2e80', 0),
 (2, 'Generic User 2', 1508931456, '2@email.com', 'fe0d8456dd3f1a0f68cde11860c34bddce97dcbc20f389f534af8c4c49e225f6307ca16e414ac04c8d67b80821690edceb86f8de0d5286dd37ee562e3dcf2e80', 0),
 (3, 'Daniel', 1509586935, 'daniel@testemail.com', 'fe0d8456dd3f1a0f68cde11860c34bddce97dcbc20f389f534af8c4c49e225f6307ca16e414ac04c8d67b80821690edceb86f8de0d5286dd37ee562e3dcf2e80', 0),
+(4, 'IF YOU ARE SEEING THIS, THEN SOMETHING HAS SERIOUSLY GONE WRONG', 42, '42', '42', 0),
 (15, 'bob', 1509625436, 'bob@email.com', 'fa585d89c851dd338a70dcf535aa2a92fee7836dd6aff1226583e88e0996293f16bc009c652826e0fc5c706695a03cddce372f139eff4d13959da6f1f5d3eabe', 0),
 (16, 'tim', 1509722110, 'tim@email.com', '12b03226a6d8be9c6e8cd5e55dc6c7920caaa39df14aab92d5e3ea9340d1c8a4d3d0b8e4314f1f6ef131ba4bf1ceb9186ab87c801af0d5c95b1befb8cedae2b9', 0),
 (17, 'bob ross', 1509927247, 'bobross@realbobross.org', '22a6bed8e97a377a3bf513b4d9213e98a9aad2c5618c561e046dbb360d7c7756aa75d8736264e74cb5fa6d5da05a63c029f4970c3032de97c1b94280d871a17d', 0),
 (18, 'Charlie War', 1510137695, 'charlie@email.com', 'fec0504afe8461cfa88322520bf172c32154ab1e5eff94bb234bfc242def250829b4163dc7428916a49a94dc4bcbadad27b1bbbd236d0eb8fea9076024651383', 0),
 (19, 'Jack Robinson', 1510586022, 'robinson.jack6973@gmail.com', 'fe0d8456dd3f1a0f68cde11860c34bddce97dcbc20f389f534af8c4c49e225f6307ca16e414ac04c8d67b80821690edceb86f8de0d5286dd37ee562e3dcf2e80', 0),
 (20, 'HERE IS A TEST', 1511464611, 'TEST@TEST.com', '2e998a2c3f3bdfbc60653c2c4e046f7fe7e5a4b16bccb5bcc36d3fcb8b3e0d9b30a5e98951a976465f3897c6b224d0c7350b69670eb2ee511d90d4d65ffeaf3b', 0),
-(21, 'SJ', 1511716764, 'SJ@email.com', 'fa585d89c851dd338a70dcf535aa2a92fee7836dd6aff1226583e88e0996293f16bc009c652826e0fc5c706695a03cddce372f139eff4d13959da6f1f5d3eabe', 0),
+(21, 'SJ', 1511716764, 'SJ@email.com', 'fe0d8456dd3f1a0f68cde11860c34bddce97dcbc20f389f534af8c4c49e225f6307ca16e414ac04c8d67b80821690edceb86f8de0d5286dd37ee562e3dcf2e80', 0),
 (22, 'AJC', 1511727650, 'Andy@email.com', '12b03226a6d8be9c6e8cd5e55dc6c7920caaa39df14aab92d5e3ea9340d1c8a4d3d0b8e4314f1f6ef131ba4bf1ceb9186ab87c801af0d5c95b1befb8cedae2b9', 0);
 
 --
